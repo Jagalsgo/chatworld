@@ -1,1 +1,15 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update  # hibernate를 사용해서 DDL을 생성하기 위함.
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true  # hibernate가 실행한 SQL 쿼리문을 보기 위함
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force : true
 
+  config:
+    import: secretApplication.yml
