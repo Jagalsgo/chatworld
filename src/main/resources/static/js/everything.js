@@ -2,7 +2,7 @@ function setCookie(name, value, expDays) {
   const d = new Date();
   d.setTime(d.getTime() + (expDays * 24 * 60 * 60 * 1000));
   const expires = "expires=" + d.toUTCString();
-  document.cookie = name + "=" + value + ";" + expires + ";path=/";
+  document.cookie = name + "=" + value + ";" + expires + ";path=/;HttpOnly";
 }
 
 function getCookie(name) {
@@ -17,7 +17,7 @@ function getCookie(name) {
 function deleteCookie(name) {
     // 즉시 쿠키 만료
     const expires = "expires=Thu, 01 Jan 1970 00:00:00 UTC";
-    document.cookie = name + "=" + ";" + expires + ";path=/";
+    document.cookie = name + "=" + ";" + expires + ";path=/;HttpOnly";
 }
 
 // 토큰을 포함한 요청 예시
@@ -43,15 +43,23 @@ function sendLoginRequest2(event){
 
 // 로그아웃
 function logout(){
-    try {
-        // 쿠키로부터 TokenInfo 객체를 가져옴
-        const tokenInfo = getCookie("tokenInfo");
-        // 쿠키 삭제
-        deleteCookie("tokenInfo");
-        location.reload();
-    }catch (e){
-        alert('로그인 시간이 만료되었거나 로그인 상태가 아닙니다.');
-    }
+
+    // 쿠키로부터 TokenInfo 객체를 가져옴
+    const tokenInfo = getCookie("tokenInfo");
+    // 쿠키 삭제
+    deleteCookie("tokenInfo");
+    location.reload();
+        sendAuthorizedRequest('/user/logout', 'POST', tokenInfo, tokenInfo,
+        function(data) {
+            // 쿠키 삭제
+            deleteCookie("tokenInfo");
+            location.reload();
+        },
+        function(error) {
+            alert(error);
+        }
+    );
+
 }
 
 function sendAuthorizedRequest(url, method, tokenInfo, requestData, successCallback, errorCallback){
@@ -88,8 +96,7 @@ function handleAuthError(xhr, status, error, tokenInfo, retryCallback, errorCall
             setCookie("tokenInfo", JSON.stringify(newTokenInfo), newTokenInfo.expires_in);
             // 새로운 access 토큰을 통해 다시 요청
             retryCallback();
-        }, errorCallback /* requestNewToken errorCallback refresh 토큰 만료, 토큰 정보가 올바르지 않음 */
-        });
+        }, errorCallback); /* requestNewToken errorCallback refresh 토큰 만료, 토큰 정보가 올바르지 않음 */
     }else{
         errorCallback(error);
     }

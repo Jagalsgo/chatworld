@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{fragments/layout}">
+
+<head>
+    <title>K리그 Chat</title>
+</head>
+
+<body layout:fragment="content">
+    <!-- body -->
+    <div class="container text-center my-5 border rounded bg-secondary-subtle">
+        <!-- chatting view -->
+        <div id="chating">
+        </div>
+        <!-- insert chat -->
+        <div class="input-group input-group-sm my-3">
+            <span class="input-group-text" id="inputGroup-sizing-sm" th:text="${userName}">Name</span>
+            <input type="text" class="form-control" placeholder="채팅을 입력하세요." aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-sm">
+            <button class="btn btn-outline-secondary btn-sm" type="button" id="button-addon2">보내기</button>
+        </div>
+    </div>
+</body>
+
+</html>

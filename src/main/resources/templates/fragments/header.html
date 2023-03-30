@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:fragment="headerFragment">
+    <!-- header -->
+    <nav class="navbar bg-dark navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/templates/index.html" th:href="@{/}">K리그 Chat</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav" style="width: 100%;">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">자유</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            K리그 1
+                        </a>
+                        <ul class="dropdown-menu">
+                            <th:block th:each="t1 : ${team1}">
+                                <li><a class="dropdown-item" href="#" th:text="${t1}">경남</a></li>
+                            </th:block>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            K리그 2
+                        </a>
+                        <ul class="dropdown-menu">
+                            <th:block th:each="t2 : ${team2}">
+                                <li><a class="dropdown-item" href="#" th:text="${t2}">경남</a></li>
+                            </th:block>
+                        </ul>
+                    </li>
+                    <li style="margin-left: auto;">
+                        <button class="btn btn-outline-danger" type="submit">로그인</button>
+                    </li>
+                    <li style="margin-left: auto;">
+                        <button class="btn btn-outline-danger" type="submit" onclick="logout">로그아웃</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+</html>

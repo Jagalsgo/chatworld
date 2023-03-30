@@ -27,11 +27,26 @@ public class UserService {
 
     }
 
-    public void join(User user) {
+    public boolean join(User user) throws Exception {
+        if(user.getUserId() == null || user.getPassword() == null || user.getNickname() == null){
+            throw new Exception("Name and password are required");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("MEMBER");
-        System.out.println(user.getPassword());
-        userRepository.save(user);
+        User resultUser = userRepository.save(user);
+        if(resultUser != null){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public boolean isUserIdDuplication(String userId){
+        return userRepository.existsByUserId(userId);
+    }
+
+    public boolean isNicknameDuplication(String nickname){
+        return userRepository.existsByNickname(nickname);
     }
 
 }

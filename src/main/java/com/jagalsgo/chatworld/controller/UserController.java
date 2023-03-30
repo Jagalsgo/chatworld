@@ -1,21 +1,19 @@
 package com.jagalsgo.chatworld.controller;
 
 import com.jagalsgo.chatworld.Service.UserService;
-import com.jagalsgo.chatworld.security.TokenInfo;
 import com.jagalsgo.chatworld.entity.User;
 import com.jagalsgo.chatworld.repository.UserRepository;
 import com.jagalsgo.chatworld.security.JwtTokenProvider;
+import com.jagalsgo.chatworld.security.TokenInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -48,15 +46,53 @@ public class UserController {
         return "index";
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestBody TokenInfo tokenInfo) {
+        // JWT 검증 및 유효성 체크
+        if (tokenInfo.getAccessToken() != null && jwtTokenProvider.validateToken(tokenInfo.getAccessToken())) {
+            // JWT 를 무효화
+            jwtTokenProvider.invalidateToken(tokenInfo);
+            return ResponseEntity.ok("로그아웃 되었습니다.");
+        } else {
+            return ResponseEntity.badRequest().body("로그인 상태가 아닙니다.");
+        }
+    }
+
     @GetMapping("/joinPage")
     public String joinPage() {
         return "joinPage";
     }
 
     @PostMapping("/join")
-    public String join(@RequestBody User user) {
-        userService.join(user);
-        return "joinPage";
+    @ResponseBody
+    public boolean join(@RequestBody User user) {
+        try {
+            boolean result = userService.join(user);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // 아이디 중복 검사
+    @GetMapping("/checkUserIdDuplication")
+    @ResponseBody
+    public Map<String, Boolean> checkUserIdDuplication(@RequestParam String userId) {
+        boolean isDuplicated = userService.isUserIdDuplication(userId);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("duplicated", isDuplicated);
+        return response;
+    }
+
+    // 닉네임 중복 검사
+    @GetMapping("/checkNicknameDuplication")
+    @ResponseBody
+    public Map<String, Boolean> checkNicknameDuplication(@RequestParam String nickname) {
+        boolean isDuplicated = userService.isNicknameDuplication(nickname);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("duplicated", isDuplicated);
+        return response;
     }
 
     @PostMapping("/refreshToken")

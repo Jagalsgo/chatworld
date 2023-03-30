@@ -1,9 +1,6 @@
 package com.jagalsgo.chatworld.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -121,6 +118,30 @@ public class JwtTokenProvider {
         }catch (Exception e){
             return false;
         }
+    }
+
+    // 토큰 무효화
+    public void invalidateToken(TokenInfo tokenInfo) {
+        // access, refresh token 만료시간 당기기
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() - 1000);
+
+        // access token 무효화
+        JwtParser jwtParser = Jwts.parser().setSigningKey(secretKey);
+        Jws<Claims> claims = jwtParser.parseClaimsJws(tokenInfo.getAccessToken());
+        String invalidatedToken = Jwts.builder()
+                .setClaims(claims.getBody())
+                .setExpiration(expirationDate)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+
+        // refresh token 무효화
+        Jws<Claims> refreshClaims = jwtParser.parseClaimsJws(tokenInfo.getRefreshToken());
+        String invalidatedRefreshToken = Jwts.builder()
+                .setClaims(refreshClaims.getBody())
+                .setExpiration(expirationDate)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
     }
 
 }

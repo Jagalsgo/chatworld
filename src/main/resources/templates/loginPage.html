@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+
+<head>
+    <th:block layout:fragment="css">
+        <link th:href="@{/css/loginPage.css}" rel="stylesheet" />
+    </th:block>
+    <th:block layout:fragment="script">
+        <script th:src="@{/js/loginPage.js}" type="text/javascript"></script>
+    </th:block>
+</head>
+
+<body layout:fragment="content">
+<!-- 회원가입 완료 메세지 -->
+<div th:if="${message}" id="message" hidden th:text="${message}"></div>
+<!-- body -->
+<div class="container border rounded my-5 bg-secondary-subtle">
+    <form class="p-4" method="post" id="loginForm">
+        <div class="fw-bold h4 mb-5 mt-3">로그인</div>
+        <div class="form-group">
+            <label for="userId" class="loginFormLabel mb-2 fw-bold text-muted">아이디</label> <input type="text"
+                                                                                                  class="form-control mb-3"
+                                                                                                  placeholder="ID"
+                                                                                                  id="userId"
+                                                                                                  name="userId">
+        </div>
+        <div class="form-group">
+            <label for="password" class="loginFormLabel mb-2 fw-bold text-muted">비밀번호</label> <input type="password"
+                                                                                                     class="form-control mb-3"
+                                                                                                     placeholder="Password"
+                                                                                                     id="password"
+                                                                                                     name="password">
+        </div>
+        <div class="text-end">
+            <button class="btn btn-secondary m-3" type="submit" onclick="sendLoginRequest(event)">로그인</button>
+        </div>
+        <div class="text-center my-4">
+            <a href="" class="text-primary">계정이 없습니까?</a>
+        </div>
+    </form>
+</div>
+</body>
+
+</html>

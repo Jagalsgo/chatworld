@@ -1,3 +1,11 @@
+$(document).ready(function() {
+    // 회원가입 시 완료 메세지
+    const message = $('#message').text();
+    if (message) {
+        alert(message);
+    }
+});
+
 function sendLoginRequest(event){
     // 폼 동작 막음
     event.preventDefault();
