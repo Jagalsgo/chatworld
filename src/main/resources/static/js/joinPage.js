@@ -164,7 +164,6 @@ $(document).ready(function() {
             "nickname": nickname
         }),
         success: function(response) {
-          console.log(response);
           alert('회원가입이 완료되었습니다!');
           window.location.href = '/user/loginPage';
         },

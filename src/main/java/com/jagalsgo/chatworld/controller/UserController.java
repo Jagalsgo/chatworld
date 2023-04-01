@@ -34,27 +34,13 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<TokenInfo> login(@RequestBody User user, HttpServletRequest request, HttpServletResponse response) {
         System.out.println("로그인 컨트롤러");
-        // 로그인 처리
-        TokenInfo tokenInfo = userService.login(user);
-        // TokenInfo 객체를 JSON 형태로 Response Body 에 포함시켜 응답
-        return ResponseEntity.ok(tokenInfo);
-    }
-
-    @PostMapping("/login2")
-    public String login2(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("로그인2 컨트롤러");
-        return "index";
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestBody TokenInfo tokenInfo) {
-        // JWT 검증 및 유효성 체크
-        if (tokenInfo.getAccessToken() != null && jwtTokenProvider.validateToken(tokenInfo.getAccessToken())) {
-            // JWT 를 무효화
-            jwtTokenProvider.invalidateToken(tokenInfo);
-            return ResponseEntity.ok("로그아웃 되었습니다.");
-        } else {
-            return ResponseEntity.badRequest().body("로그인 상태가 아닙니다.");
+        try{
+            // 로그인 처리
+            TokenInfo tokenInfo = userService.login(user);
+            // TokenInfo 객체를 JSON 형태로 Response Body 에 포함시켜 응답
+            return ResponseEntity.ok(tokenInfo);
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(null);
         }
     }
 

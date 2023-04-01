@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="/templates/index.html" th:href="@{/}">K리그 Chat</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -16,32 +16,36 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                           aria-expanded="false">
                             K리그 1
                         </a>
                         <ul class="dropdown-menu">
                             <th:block th:each="t1 : ${team1}">
-                                <li><a class="dropdown-item" href="#" th:text="${t1}">경남</a></li>
+                                <li><a class="dropdown-item" href="#" th:text="${t1.name}">경남</a></li>
                             </th:block>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                           aria-expanded="false">
                             K리그 2
                         </a>
                         <ul class="dropdown-menu">
                             <th:block th:each="t2 : ${team2}">
-                                <li><a class="dropdown-item" href="#" th:text="${t2}">경남</a></li>
+                                <li><a class="dropdown-item" href="#" th:text="${t2.name}">경남</a></li>
                             </th:block>
                         </ul>
                     </li>
-                    <li style="margin-left: auto;">
-                        <button class="btn btn-outline-danger" type="submit">로그인</button>
-                    </li>
-                    <li style="margin-left: auto;">
-                        <button class="btn btn-outline-danger" type="submit" onclick="logout">로그아웃</button>
-                    </li>
+                    <div style="margin-left: auto; display: flex; align-items: center;">
+                        <li>
+                            <button class="btn btn-outline-danger" id="loginBtn"
+                                    onclick="location.href='/user/loginPage'">로그인
+                            </button>
+                        </li>
+                        <li>
+                            <button class="btn btn-outline-danger" id="logoutBtn" onclick="logout()">로그아웃</button>
+                        </li>
+                    </div>
                 </ul>
             </div>
         </div>

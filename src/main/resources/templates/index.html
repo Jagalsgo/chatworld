@@ -14,13 +14,13 @@
     <div class="container text-center my-5">
         <div class="my-4 fw-bold h4">k리그 1</div>
         <th:block th:each="t1 : ${team1}">
-            <button type="button" class="btn btn-outline-danger fw-bold m-2"><span th:text="${t1}"></span></button>
+            <button type="button" class="btn btn-outline-danger fw-bold m-2"><span th:text="${t1.name}"></span></button>
         </th:block>
     </div>
     <div class="container text-center my-5">
         <div class="my-4 fw-bold h4">k리그 2</div>
         <th:block th:each="t2 : ${team2}">
-            <button type="button" class="btn btn-outline-primary fw-bold m-2"><span th:text="${t2}"></span></button>
+            <button type="button" class="btn btn-outline-primary fw-bold m-2"><span th:text="${t2.name}"></span></button>
         </th:block>
     </div>
     <button class="btn btn-secondary m-3" onclick="sendLoginRequest2(event)">로그인</button>

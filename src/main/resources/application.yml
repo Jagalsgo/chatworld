@@ -5,6 +5,7 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true  # hibernate가 실행한 SQL 쿼리문을 보기 위함
+    open-in-view: false
   http:
     encoding:
       charset: UTF-8

@@ -19,17 +19,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String path = request.getRequestURI();
-        if (path.startsWith("/api/auth")) {
-            filterChain.doFilter(request, response);
-            return;
+        // /auth/ 로 들어오는 요청
+        if (path.startsWith("/auth/")) {
+            String token = jwtTokenProvider.resolveToken(request);
+            if (token != null && jwtTokenProvider.validateToken(token)) {
+                Authentication auth = jwtTokenProvider.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
         }
-
-        String token = jwtTokenProvider.resolveToken(request);
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            Authentication auth = jwtTokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(auth);
-        }
-
         filterChain.doFilter(request, response);
     }
 

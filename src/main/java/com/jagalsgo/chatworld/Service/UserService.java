@@ -17,14 +17,14 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
 
     public TokenInfo login(User user) {
-
         User validUser = userRepository.findByUserId(user.getUserId());
+        if(validUser == null){
+            throw new IllegalArgumentException("잘못된 아이디입니다.");
+        }
         if (!passwordEncoder.matches(user.getPassword(), validUser.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
-        System.out.println("로그인");
         return jwtTokenProvider.createToken(validUser.getUserId(), validUser.getRole());
-
     }
 
     public boolean join(User user) throws Exception {
