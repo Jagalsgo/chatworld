@@ -83,8 +83,6 @@ public class UserController {
 
     @PostMapping("/refreshToken")
     public ResponseEntity<TokenInfo> refreshToken(@RequestBody Map<String, String> inputData) {
-        System.out.println("refreshToken 컨트롤러");
-
         // access 토큰을 가져오기 위한 refresh 토큰
         String refreshToken = inputData.get("refreshToken");
 

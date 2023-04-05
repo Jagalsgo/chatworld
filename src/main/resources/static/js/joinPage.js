@@ -31,7 +31,6 @@ $(document).ready(function() {
                   $('#userId').addClass('is-invalid');
                   $('#userIdFeedback').text('이미 사용중인 아이디입니다.');
                 } else {
-                  console.log('not duplicated');
                   $('#userId').removeClass('is-invalid');
                   $('#userIdFeedback').text('');
                 }

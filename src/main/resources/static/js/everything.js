@@ -1,14 +1,12 @@
 $(document).ready(function(){
-
     checkLoginView();
-
 })
 
 function setCookie(name, value, expDays) {
-  const d = new Date();
-  d.setTime(d.getTime() + (expDays * 24 * 60 * 60 * 1000));
-  const expires = "expires=" + d.toUTCString();
-  document.cookie = name + "=" + value + ";" + expires + ";path=/;HttpOnly";
+    const d = new Date();
+    d.setTime(d.getTime() + (expDays * 24 * 60 * 60 * 1000));
+    const expires = "expires=" + d.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/";
 }
 
 function getCookie(name) {
@@ -27,66 +25,48 @@ function getCookie(name) {
 function deleteCookie(name) {
     // 즉시 쿠키 만료
     const expires = "expires=Thu, 01 Jan 1970 00:00:00 UTC";
-    document.cookie = name + "=" + ";" + expires + ";path=/;HttpOnly";
+    document.cookie = name + "=" + ";" + expires + ";path=/";
 }
 
 // 로그인 유무에 따른 뷰 보여주기
 function checkLoginView(){
     // 쿠키로부터 TokenInfo 객체를 가져옴
     const tokenInfo = getCookie("tokenInfo");
+
     // 로그인 유무 체크 후 그에 따른 뷰 보여주기
     if(tokenInfo){
-        $.ajax({
-            url: '/auth/checkLogin',
-            type: 'GET',
-            beforeSend: function(xhr) {
-              xhr.setRequestHeader('Authorization', 'Bearer ' + tokenInfo.accessToken);
-            },
-            success: function(data) /* access 토큰 인증 성공 */ {
-                if(data) /* 로그인 유 */ {
-                        // 로그인 버튼 숨기기
-                        $("#loginBtn").hide();
-                        // 로그아웃 버튼 보이기
-                        $("#logoutBtn").show();
-                    }else /* 로그인 무 */ {
-                        // 로그인 버튼 숨기기
-                        $("#loginBtn").show();
-                        // 로그아웃 버튼 보이기
-                        $("#logoutBtn").hide();
-                }
-            },
-            function(error) {
-                console.log('error', error);
-            }
-        })
-    }
-}
-
-// 토큰을 포함한 요청 예시
-function sendLoginRequest2(event){
-    // 폼 동작 막음
-    event.preventDefault();
-
-    // 쿠키로부터 TokenInfo 객체를 가져옴
-    const tokenInfo = getCookie("tokenInfo");
-    if(tokenInfo){
-        sendAuthorizedRequest('/auth/login2', 'POST', tokenInfo, null,
+        sendAuthorizedRequest('/auth/checkLogin', 'POST', 'application/json', tokenInfo, JSON.stringify(tokenInfo),
             function(data) {
-              console.log('Success:', data);
+                if(data) /* 로그인 유 */ {
+                    loginStatus();
+                }else /* 로그인 무 */ {
+                    logoutStatus();
+                }
             },
             function(error) {
-                if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
-                      window.location.href = "/user/loginPage";
-                }
+                logoutStatus();
+                console.log('error', error);
             }
         );
     }else{
-        if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
-          window.location.href = "/user/loginPage";
-        }
+        logoutStatus();
     }
+}
 
+// checkLogin 로그인 상태
+function loginStatus(){
+    // 로그인 버튼 숨기기
+    $("#loginBtn").addClass("d-none");
+    // 로그아웃 버튼 보이기
+    $("#logoutBtn").removeClass("d-none");
+}
 
+// checkLogin 로그아웃 상태
+function logoutStatus(){
+    // 로그아웃 버튼 숨기기
+    $("#logoutBtn").addClass("d-none");
+    // 로그인 버튼 보이기
+    $("#loginBtn").removeClass("d-none");
 }
 
 // 로그아웃
@@ -94,14 +74,15 @@ function logout(){
     // 쿠키로부터 TokenInfo 객체를 가져옴
     const tokenInfo = getCookie("tokenInfo");
     if(tokenInfo){
-        sendAuthorizedRequest('/auth/logout', 'POST', tokenInfo, tokenInfo,
+        sendAuthorizedRequest('/auth/logout', 'POST', 'application/json', tokenInfo, JSON.stringify(tokenInfo),
             function(data) {
+                console.log('logout js success');
                 // 쿠키 삭제
                 deleteCookie("tokenInfo");
-                getCookie("tokenInfo");
+                location.reload();
             },
             function(error) {
-                alert(error);
+                alert("로그인 상태가 아닙니다");
             }
         );
     }else{
@@ -109,11 +90,12 @@ function logout(){
     }
 }
 
-function sendAuthorizedRequest(url, method, tokenInfo, requestData, successCallback, errorCallback){
+function sendAuthorizedRequest(url, method, contentType, tokenInfo, requestData, successCallback, errorCallback){
 
     $.ajax({
         url: url,
         type: method,
+        contentType: contentType,
         data: requestData,
         beforeSend: function(xhr) {
           xhr.setRequestHeader('Authorization', 'Bearer ' + tokenInfo.accessToken);
@@ -125,7 +107,7 @@ function sendAuthorizedRequest(url, method, tokenInfo, requestData, successCallb
             // handleAuthError 호출
             handleAuthError(xhr, status, error, tokenInfo, function() /* handleAuthError retryCallback */ {
                 // refresh 토큰을 통해 받은 access 토큰을 통해 다시 요청
-                sendAuthorizedRequest(url, method, getCookie("tokenInfo"), requestData, successCallback, errorCallback);
+                sendAuthorizedRequest(url, method, contentType, getCookie("tokenInfo"), requestData, successCallback, errorCallback);
             }, errorCallback);
         }
     })
@@ -161,13 +143,4 @@ function requestNewToken(tokenInfo, successCallback, errorCallback){
             errorCallback(error);
         }
     });
-}
-
-function isTokenInfo(tokenInfo) {
-  // tokenInfo 유무 확인
-  if (!tokenInfo) {
-    if (confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")) {
-      window.location.href = "/user/loginPage";
-    }
-  }
 }
