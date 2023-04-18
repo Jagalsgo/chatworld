@@ -3,14 +3,18 @@
     layout:decorate="~{fragments/layout}">
 
 <head>
-    <title>K리그 Chat</title>
+    <th:block layout:fragment="script">
+        <script th:src="@{/js/chatting.js}" type="text/javascript"></script>
+    </th:block>
 </head>
 
 <body layout:fragment="content">
+    <input type="hidden" id="chatId" value="${team.id}">
     <!-- body -->
     <div class="container text-center my-5 border rounded bg-secondary-subtle">
+    <h2 class="my-5 fw-bold"><span th:text="${team.name}"></span></h2>
         <!-- chatting view -->
-        <div id="chating">
+        <div id="messageArea">
         </div>
         <!-- insert chat -->
         <div class="input-group input-group-sm my-3">

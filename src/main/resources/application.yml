@@ -11,6 +11,5 @@ spring:
       charset: UTF-8
       enabled: true
       force : true
-
   config:
     import: secretApplication.yml

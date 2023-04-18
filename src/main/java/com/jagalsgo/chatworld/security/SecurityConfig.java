@@ -1,14 +1,10 @@
-package com.jagalsgo.chatworld.config;
+package com.jagalsgo.chatworld.security;
 
-import com.jagalsgo.chatworld.security.JwtAuthenticationFilter;
-import com.jagalsgo.chatworld.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -32,8 +28,8 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .csrf().disable()
                 .formLogin().disable()
-                .apply(new MyCustomFilters())
-                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                /*.apply(new MyCustomFilters())*/
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
@@ -43,7 +39,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    public class MyCustomFilters extends AbstractHttpConfigurer<MyCustomFilters, HttpSecurity> {
+    /*public class MyCustomFilters extends AbstractHttpConfigurer<MyCustomFilters, HttpSecurity> {
         @Override
         public void configure(HttpSecurity http) throws Exception {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
@@ -51,6 +47,6 @@ public class SecurityConfig {
                     .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         }
-    }
+    }*/
 
 }

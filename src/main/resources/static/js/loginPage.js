@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
     // 회원가입 시 완료 메세지
     const message = $('#message').text();
     if (message) {

@@ -2,9 +2,12 @@ package com.jagalsgo.chatworld.interceptor;
 
 import com.jagalsgo.chatworld.entity.Team;
 import com.jagalsgo.chatworld.repository.TeamRepository;
+import com.jagalsgo.chatworld.security.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 

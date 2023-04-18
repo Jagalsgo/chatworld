@@ -33,7 +33,6 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<TokenInfo> login(@RequestBody User user, HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("로그인 컨트롤러");
         try{
             // 로그인 처리
             TokenInfo tokenInfo = userService.login(user);
